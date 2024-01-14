@@ -1,7 +1,8 @@
 // Global app controller
 
-import Search from "./modules/Search";
-import { elements } from "./views/base";
+import Search from "./modules/Search.js";
+import { elements } from "./views/base.js";
+import * as searchView  from "./views/searchView.js";
 
 
 /* 
@@ -14,11 +15,15 @@ const state = {};
 
 /* serch controler */
 
-const controlSearch = (e) => {
+
+const controlSearch = async (e) => {
     e.prevenDefault()
 
+    const query = searchView.getInput();
 
-    state.search = new Search("pizza")
+
+    state.search = new Search("pizza");
+    await state.search.getResult()
     console.log(state)
 }
 
