@@ -1,7 +1,7 @@
 // Global app controller
 
 import Search from "./modules/Search.js";
-import { elements } from "./views/base.js";
+import { clearLoader, elements,renderLoader } from "./views/base.js";
 import * as searchView  from "./views/searchView.js";
 
 
@@ -21,10 +21,34 @@ const controlSearch = async (e) => {
 
     const query = searchView.getInput();
 
+    if(query){
+        // 2. new serch oject result
+        state.search = new Search(query);
 
-    state.search = new Search("pizza");
-    await state.search.getResult()
-    console.log(state)
+        //3. prepear UI for result
+        searchView.clearInput()
+        searchView.clearResult()
+        renderLoader(elements.searchResList)
+
+
+        try {
+            // 4.Serch API
+            await state.search.getResult()
+        } catch (error) {
+            alert("Search Error")
+        }
+
+
+        //5.RENDER RESULT ON UI
+       
+
+        searchView.renderResult(state.search.result)
+        clearLoader()
+        console.log(state)
+    }
+
+
+   
 }
 
 // 1) get query from view
@@ -33,3 +57,14 @@ const controlSearch = async (e) => {
 
 
 elements.searchForm.addEventListener("submit", controlSearch)
+
+elements.searchResPage.addEventListener("click", e=>{
+    const btn = e.target.closest(".btn-inline");
+
+    if(btn){
+        const goto = +btn.dataset.goto;
+        searchView.clearResult()
+        
+        searchView.renderResult(state.search.result, goto)
+    }
+})

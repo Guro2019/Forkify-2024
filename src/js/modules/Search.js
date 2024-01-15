@@ -6,8 +6,14 @@ export default class Search {
     }
 
     async getResults(){
-        const result = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes?search=${this.query}`);
-        const res = await result.json()
-      this.result = res.recipes;
+        try {
+            const result = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes?search=${this.query}`);
+            const res = await result.json()
+            this.result = res.recipes;
+        } catch (error) {
+            alert("Search Error")
+        }
+
+        
     }
 }
